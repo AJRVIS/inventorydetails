@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Management</title>
+
+    <!-- Bootstrap 5 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #74b9ff, #81ecec);
+            color: #ffffff;
+        }
+
+        .container {
+            margin-top: 50px;
+            background: #2d3436;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            font-weight: 600;
+            color: #81ecec;
+        }
+
+        table {
+            background:rgb(184, 226, 241);
+            border-radius: 10px;
+        }
+
+        table thead {
+            background: #00cec9;
+        }
+
+        table th, table td {
+            color: #ffffff;
+        }
+
+        .btn-primary {
+            background: #00cec9;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: #0984e3;
+        }
+
+        .btn-danger:hover {
+            background: #d63031;
+        }
+
+        .btn-success {
+            background: #55efc4;
+            border: none;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        .btn-success:hover {
+            transform: scale(1.05);
+            background: #00b894;
+        }
+
+        .alert {
+            background: #d63031;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        /* Input hover and focus effects */
+        input[type="text"], input[type="number"] {
+            transition: box-shadow 0.3s ease;
+        }
+
+        input[type="text"]:focus, input[type="number"]:focus {
+            box-shadow: 0 0 10px #00cec9;
+            border-color: #00cec9;
+        }
+
+        /* Add subtle fade-in animation */
+        .fade-in {
+            animation: fadeIn 1s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #dfe6e9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container fade-in">
+        <h1 class="text-center">Inventory Management</h1>
+        <hr>
+
+        <!-- Flash messages -->
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="alert alert-warning">
+                    {{ messages[0] }}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Add Product Form -->
+        <form action="/add" method="post" class="mb-4">
+            <div class="row">
+                <div class="col-md-4">
+                    <input type="text" name="name" class="form-control" placeholder="Product Name" required>
+                </div>
+                <div class="col-md-3">
+                    <input type="number" name="quantity" class="form-control" placeholder="Quantity" required>
+                </div>
+                <div class="col-md-3">
+                    <input type="number" step="0.01" name="price" class="form-control" placeholder="Price" required>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">Add Product</button>
+                </div>
+            </div>
+        </form>
+
+        <!-- Product Table -->
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                <tr>
+                    <td>{{ product[0] }}</td>
+                    <td>{{ product[1] }}</td>
+                    <td>
+                        <form action="/update/{{ product[0] }}" method="post" class="d-flex">
+                            <input type="number" name="quantity" class="form-control me-2" value="{{ product[2] }}" required>
+                            <button type="submit" class="btn btn-success">Update</button>
+                        </form>
+                    </td>
+                    <td>${{ product[3] }}</td>
+                    <td>
+                        <a href="/delete/{{ product[0] }}" class="btn btn-danger">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Inventory Management System. All rights reserved.</p>
+    </footer>
+</body>
+</html>
